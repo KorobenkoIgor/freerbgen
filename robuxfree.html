@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Robux Generator</title>
+<style>
+    body {
+        background: #0d1117;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 50px;
+        overflow-x: hidden;
+    }
+
+    .box {
+        background: #161b22;
+        width: 90%;
+        max-width: 400px;
+        margin: auto;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px #00ff91;
+    }
+
+    input, select, button {
+        width: 90%;
+        padding: 10px;
+        margin-top: 12px;
+        border-radius: 6px;
+        border: none;
+        font-size: 16px;
+    }
+
+    button {
+        background: #00ff91;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    #logBox {
+        background: #0f1318;
+        width: 90%;
+        max-height: 150px;
+        margin: 20px auto 0;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: left;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        display: none;
+        overflow-y: auto;
+        border: 1px solid #00ff91;
+    }
+
+    #progress {
+        width: 100%;
+        background: #333;
+        border-radius: 10px;
+        margin-top: 20px;
+        display: none;
+    }
+
+    #progress-bar {
+        height: 20px;
+        width: 0%;
+        background: #00ff91;
+        border-radius: 10px;
+    }
+
+    /* эффект глюка */
+    @keyframes glitch {
+        0% { transform: translate(0); }
+        20% { transform: translate(-5px, 3px); }
+        40% { transform: translate(3px, -5px); }
+        60% { transform: translate(-3px, 2px); }
+        80% { transform: translate(2px, -3px); }
+        100% { transform: translate(0); }
+    }
+
+    .glitch {
+        animation: glitch 0.2s infinite;
+    }
+</style>
+</head>
+<body>
+
+<div class="box" id="mainBox">
+    <h2>Robux Generator</h2>
+
+    <input id="nickname" placeholder="Введите ник Roblox">
+
+    <select id="robux-select">
+        <option value="400">400 Robux</option>
+        <option value="800">800 Robux</option>
+        <option value="2000">2000 Robux</option>
+        <option value="10000">10000 Robux</option>
+    </select>
+
+    <button onclick="startGen()">Накрутить</button>
+
+    <div id="progress">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div id="logBox"></div>
+
+    <audio id="boom" src="sound.mp3"></audio>
+</div>
+
+<script>
+function startGen() {
+    const nick = document.getElementById('nickname').value.trim();
+    if (!nick) return alert("Введите ник!");
+
+    const logBox = document.getElementById("logBox");
+    const progress = document.getElementById("progress");
+    const bar = document.getElementById("progress-bar");
+
+    logBox.style.display = "block";
+    progress.style.display = "block";
+
+    logBox.innerHTML = "";
+    bar.style.width = "0%";
+
+    let logs = [
+        "Подключение к серверам Roblox...",
+        "Авторизация через API...",
+        "Проверка аккаунта: " + nick,
+        "Получение токенов доступа...",
+        "Инициализация генерации Robux...",
+        "Связь с платежными серверами...",
+        "Генерация " + document.getElementById('robux-select').value + " Robux...",
+        "Почти готово..."
+    ];
+
+    let index = 0;
+    let prog = 0;
+
+    const interval = setInterval(() => {
+        if (index < logs.length) {
+            logBox.innerHTML += logs[index] + "<br>";
+            logBox.scrollTop = logBox.scrollHeight;
+
+            index++;
+        }
+
+        prog += 100 / 30;
+        bar.style.width = prog + "%";
+
+        if (prog >= 100) {
+            clearInterval(interval);
+
+            // ЭФФЕКТ ГЛЮКА ПЕРЕД ЗВУКОМ
+            document.body.classList.add("glitch");
+
+            setTimeout(() => {
+                document.getElementById("boom").play();
+            }, 200);
+
+            setTimeout(() => {
+                document.body.classList.remove("glitch");
+                alert("Ошибка сервера Roblox: накрутка невозможна 😄");
+            }, 1500);
+        }
+    }, 200);
+}
+</script>
+
+</body>
+</html>
